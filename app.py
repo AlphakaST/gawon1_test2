@@ -9,6 +9,7 @@ import mysql.connector
 from mysql.connector import Error as MySQLError
 from mysql.connector import pooling
 from openai import OpenAI
+from PIL import Image, UnidentifiedImageError
 
 # ─────────────────────────────────────────────────────
 # 페이지/상수
@@ -322,8 +323,14 @@ def render_question_block(qidx: int, answer_key: str, placeholder: str, height: 
         st.write(QUESTION_TEXTS[qidx])
     with col_img:
         img_path = os.path.join("image", IMAGE_FILENAMES[qidx])
-        if os.path.exists(img_path):
-            st.image(img_path, caption="문항 참고 이미지", use_container_width=True)
+        if os.path.isfile(img_path):
+            try:
+                with Image.open(img_path) as im:
+                    st.image(im, caption="문항 참고 이미지", use_container_width=True)
+            except UnidentifiedImageError:
+                st.info(f"이미지 형식 인식 실패: {os.path.basename(img_path)}")
+            except Exception as e:
+                st.info(f"이미지 로드 실패({os.path.basename(img_path)}): {e}")
         else:
             st.info(f"이미지 파일을 찾을 수 없습니다: {img_path}")
 
@@ -440,4 +447,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
