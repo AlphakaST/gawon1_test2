@@ -1,5 +1,5 @@
-streamlit>=1.32
-openai>=1.30
-mysql-connector-python>=9.0
-pandas>=2.2
-pyarrow==17.0.0
+streamlit>=1.32,<1.39
+openai>=1.30,<2
+mysql-connector-python>=8.2,<9.1
+pandas>=2.2,<2.3
+# pyarrow 핀 제거 (설치 필요시 pandas가 알아서 맞춰 옵니다)
